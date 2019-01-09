@@ -201,15 +201,7 @@ def predictsp(X, cls, organism, cpu=1):
   for k in range(X.shape[0]):
     if cls[k] == 2:
       x = numpy.array([X[k]])
-
       rx = numpy.zeros((cfg.NTERM,1))
-      #rx = []
-      #relmodelpfx = os.path.join(cfg.DEEPSIG_ROOT, cfg.DNN_MODEL_DIR, organism, "model.0.0.relevance.txt")
-      #relmodel = model_from_json(json.load(open("%s.arch.json" % relmodelpfx)))
-      #relmodel.load_weights("%s.hdf5" % relmodelpfx)
-      #rx.append(relevance(x, relmodel).reshape(cfg.NTERM, 1))
-      #rx = numpy.concatenate(rx, axis=1)
-      #rx = numpy.mean(rx, axis=1).reshape(cfg.NTERM, 1)
       P.append(numpy.concatenate((x[0], rx), axis=1))
 
   if len(P) > 0:
