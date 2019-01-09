@@ -12,6 +12,7 @@ from Bio import SeqIO
 
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import model_from_json, Model
+from keras import backend as K
 
 import deepsigconfig as cfg
 import crf
@@ -135,7 +136,14 @@ def relevance(x, model, relout=2):
   hiddens  = weights[3].shape[0]
   out      = weights[-1].shape[0]
 
-  Rf     = model.predict(x)[0][relout]
+  layers = [-1, -3, -4, 1]
+  inp = model.input
+  outputs = [model.layers[l].output for l in layers]  # all layer outputs
+  functor = K.function([inp, K.learning_phase()], outputs)
+  layer_outs = functor([x, 1.])
+  Rf     = layer_outs[0][0][relout]
+  hiddenLayerOut, mergedPoolOut, convLayerOut = layer_outs[1][0], layer_outs[2][0], layer_outs[3][0]
+  #Rf     = model.predict(x)[0][relout]
 
   hiddenLayerOut = Model(inputs=model.input, outputs=model.layers[-3].output).predict(x)[0]
   Rh     = numpy.zeros(hiddens)
@@ -144,7 +152,7 @@ def relevance(x, model, relout=2):
   for i in range(hiddens):
     Rh[i] = Rf * hiddenLayerOut[i] * B[i] / Nb
 
-  mergedPoolOut  = Model(inputs=model.input, outputs=model.layers[-4].output).predict(x)[0]
+  #mergedPoolOut  = Model(inputs=model.input, outputs=model.layers[-4].output).predict(x)[0]
   Rp     = numpy.zeros(2 * filters)
   W      = numpy.select([weights[-4] > 0], [weights[-4]])
   assert(W.shape[0] == Rp.shape[0])
@@ -154,7 +162,7 @@ def relevance(x, model, relout=2):
   Rpm = Rp[:filters]
   Rpa = Rp[filters:]
 
-  convLayerOut  = Model(inputs=model.input, outputs=model.layers[1].output).predict(x)[0]
+  #convLayerOut  = Model(inputs=model.input, outputs=model.layers[1].output).predict(x)[0]
   Rc            = numpy.zeros((maxlen, filters))
 
   for i in range(filters):
@@ -196,13 +204,10 @@ def predictsp(X, cls, organism, cpu=1):
 
       rx = numpy.zeros((cfg.NTERM,1))
       #rx = []
-      #for i in range(5):
-      #  for j in range(4):
-      #    relmodelpfx = os.path.join(cfg.DEEPSIG_ROOT, cfg.DNN_MODEL_DIR, organism,
-      #                               "model.%d.%d.relevance.txt" % (i, j))
-      #    relmodel = model_from_json(json.load(open("%s.arch.json" % relmodelpfx)))
-      #    relmodel.load_weights("%s.hdf5" % relmodelpfx)
-      #    rx.append(relevance(x, relmodel).reshape(cfg.NTERM, 1))
+      #relmodelpfx = os.path.join(cfg.DEEPSIG_ROOT, cfg.DNN_MODEL_DIR, organism, "model.0.0.relevance.txt")
+      #relmodel = model_from_json(json.load(open("%s.arch.json" % relmodelpfx)))
+      #relmodel.load_weights("%s.hdf5" % relmodelpfx)
+      #rx.append(relevance(x, relmodel).reshape(cfg.NTERM, 1))
       #rx = numpy.concatenate(rx, axis=1)
       #rx = numpy.mean(rx, axis=1).reshape(cfg.NTERM, 1)
       P.append(numpy.concatenate((x[0], rx), axis=1))
