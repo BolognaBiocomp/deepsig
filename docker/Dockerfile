@@ -15,14 +15,14 @@ LABEL maintainer="Castrense Savojardo <castrense.savojardo2@unibo.it>"
 
 WORKDIR /usr/src/deepsig
 
-COPY requirements.txt .
+COPY ../requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt && \
     useradd -m deepsig
 
 USER deepsig
 
-COPY . .
+COPY .. .
 
 WORKDIR /data/
 
