@@ -19,7 +19,7 @@ $ docker pull bolognabiocomp/deepsig
 Now the DeepSig Docker image is installed in your local Docker environment and ready to be used. To show DeepSig help page run:
 
 ```
-$ docker run deepsig -h
+$ docker run bolognabiocomp/deepsig -h
 
 Using TensorFlow backend.
 usage: deepsig.py [-h] -f FASTA -o OUTF -k {euk,gramp,gramn} [-a CPU]
@@ -48,7 +48,7 @@ $ wget http://www.uniprot.org/uniprot/G5ED35.fasta
 Now, we are ready to predict the signal peptide of our input protein. Run:
 
 ```
-$ docker run -v $(pwd):/data/ deepsig -f G5ED35.fasta -o G5ED35.out -k euk
+$ docker run -v $(pwd):/data/ bolognabiocomp/deepsig -f G5ED35.fasta -o G5ED35.out -k euk
 ```
 
 In the example above, we are mapping the current program working directory ($(pwd)) to the /data/ folder inside the container. This will allow the container to see the external FASTA file G5ED35.fasta.
