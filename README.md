@@ -1,1 +1,1 @@
-# DeepSig - Predictor of signal peptides in proteins based on deep learning
+#### DeepSig - Predictor of signal peptides in proteins based on deep learning
