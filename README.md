@@ -42,7 +42,7 @@ The program accepts three mandatory arguments:
 As an example, run the program on the eukaryotic example FASTA file contained in the folder "testdata":
 
 ```
-$ ./deepsig.py -f testdata/SPEuk.nr.fasta -k euk -o testdata/SPEuk.nr.out -a 4
+$ ./deepsig.py -f testdata/SPEuk.nr.fasta -k euk -o testdata/SPEuk.nr.out
 ```
 
 This will run deepsig on sequences contained in the "testdata/SPEuk.nr.fasta" file, using the Eukaryotes models and storing the output in the "testdata/SPEuk.nr.out" file.
