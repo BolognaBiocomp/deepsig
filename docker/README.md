@@ -1,5 +1,10 @@
 ### DeepSig - Predictor of signal peptides in proteins based on deep learning
 
+#### Publication
+
+Savojardo C., Martelli P.L., Fariselli P., Casadio R. [DeepSig: deep learning improves signal peptide detection in proteins](https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/btx818/4769493) *Bioinformatics* (2017) **34**(10): 1690-1696.
+
+
 #### Usage of the DeepSig Docker image
 
 The first step to run DeepSig Docker container is the pull the container image. To do so, run:
