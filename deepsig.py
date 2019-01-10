@@ -28,9 +28,7 @@ def main():
                       help = "The organism the sequences belongs to",
                       choices=['euk', 'gramp', 'gramn'],
                       dest = "organism", required = True)
-  parser.add_argument("-a", "--cpu",
-                      help = "Maximum number of cpu cores",
-                      dest = "cpu", type = int, default = 1)
+
 
   ns = parser.parse_args()
   try:
@@ -39,11 +37,11 @@ def main():
     X, accs  = readdata(ns.fasta, cfg.NTERM)
     printDate("Read %d protein sequences" % len(accs))
     printDate("Detecting signal peptides")
-    setUpTFCPU(ns.cpu)
+    #cat setUpTFCPU(1)
     Y, Ytm, Ync, cls, Ytm_norm, Ync_norm = detectsp(X, ns.organism)
     printDate("Detected %d signal peptides" % cls.count(2))
     printDate("Predicting cleavage sites")
-    cleavage = predictsp(X, cls, ns.organism, cpu=ns.cpu)
+    cleavage = predictsp(X, cls, ns.organism, cpu=1)
     printDate("Writing results to output file")
     ofs = open(ns.outf, 'w')
     for i in range(len(accs)):
