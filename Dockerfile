@@ -29,6 +29,4 @@ WORKDIR /data/
 # Verbosity level of Tensorflow
 ENV TF_CPP_MIN_LOG_LEVEL=3 DEEPSIG_ROOT=/usr/src/deepsig PATH=/usr/src/deepsig:$PATH
 
-#CMD ["deepsig.py", "-h"]
-
 ENTRYPOINT ["/usr/src/deepsig/deepsig.py"]
