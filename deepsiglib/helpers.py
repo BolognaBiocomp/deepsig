@@ -20,7 +20,7 @@ import crf
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 def printDate(msg):
-  print "[%s] %s" % (strftime("%a, %d %b %Y %H:%M:%S", localtime()), msg)
+  print("[%s] %s" % (strftime("%a, %d %b %Y %H:%M:%S", localtime()), msg))
 
 def SetUpTemporaryEnvironment():
   tempfile.tempdir = os.path.abspath(tempfile.mkdtemp(prefix="job.tmpd.",
