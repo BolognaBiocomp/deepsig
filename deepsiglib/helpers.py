@@ -204,10 +204,10 @@ def predictsp(X, cls, organism, we, cpu=1):
       ofs.write('\n')
     ofs.close()
 
-    model_outputs = we.createFile("crf.",".model.outputs.txt")
-    posterior_output = we.createFile("crf.",".model.posterior.txt")
-    mofs = open(model_outputs, 'w')
-    pofs = open(posterior_output, 'w')
+    #model_outputs = we.createFile("crf.",".model.outputs.txt")
+    #posterior_output = we.createFile("crf.",".model.posterior.txt")
+    #mofs = open(model_outputs, 'w')
+    #pofs = open(posterior_output, 'w')
     C = []
     for i in range(1): #5
       for j in range(1): #4
@@ -223,10 +223,10 @@ def predictsp(X, cls, organism, we, cpu=1):
         #  for line in seq:
         #    print(" ".join(["%.2f" % x for x in line]), file=pofs)
         C.append(pred)
-        for k in range(P.shape[0]):
-          print("Seq%d" % k, "".join(["%d" % q for q in pred[k]]), file=mofs)
-    mofs.close()
-    pofs.close()
+        #for k in range(P.shape[0]):
+          #print("Seq%d" % k, "".join(["%d" % q for q in pred[k]]), file=mofs)
+    #mofs.close()
+    #pofs.close()
     C = numpy.array(C)
     #print(C.shape)
     C = numpy.mean(C.T, axis=2).T
