@@ -19,7 +19,9 @@ COPY . .
 
 WORKDIR /data/
 
-RUN conda update -n base conda && conda install --yes keras==2.4.3 biopython==1.78 tensorflow==2.2.0
+RUN conda update -n base conda && \
+   conda install --yes keras==2.4.3 biopython==1.78 tensorflow==2.2.0 && \
+   conda clean -a
 
 # Verbosity level of Tensorflow
 ENV TF_CPP_MIN_LOG_LEVEL=3 DEEPSIG_ROOT=/usr/src/deepsig PATH=/usr/src/deepsig:$PATH

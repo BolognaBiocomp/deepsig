@@ -200,17 +200,12 @@ def predictsp(X, cls, organism, we, cpu=1):
       for j in range(P.shape[1]):
         ofs.write(" ".join([str(v) for v in list(P[i][j])] + ['G']))
         ofs.write("\n")
-        #ofs.write(" ".join(map(str, list(P[i][j])) + ['G']) + '\n')
       ofs.write('\n')
     ofs.close()
 
-    #model_outputs = we.createFile("crf.",".model.outputs.txt")
-    #posterior_output = we.createFile("crf.",".model.posterior.txt")
-    #mofs = open(model_outputs, 'w')
-    #pofs = open(posterior_output, 'w')
     C = []
-    for i in range(1): #5
-      for j in range(1): #4
+    for i in range(5): #5
+      for j in range(4): #4
         crfmodel = os.path.join(cfg.DEEPSIG_ROOT,
                                 cfg.CRF_MODEL_DIR, organism,
                                 "model.seq.w%d.s%s.l%d.%d.%d" % (cfg.CRF_WINDOWS[organism],
@@ -218,17 +213,8 @@ def predictsp(X, cls, organism, we, cpu=1):
                                                                      cfg.NTERM,
                                                                      i, j))
         pred = runCRF(crf_datf, crfmodel, cfg.CRF_WINDOWS[organism], cfg.CRF_PARAMS[organism][i]['decoding'], we, cpu=cpu)
-        #pred, posterior = runCRF2(P, crfmodel, cfg.CRF_WINDOWS[organism], cfg.CRF_PARAMS[organism][i]['decoding'], cpu=cpu)
-        #for seq in posterior:
-        #  for line in seq:
-        #    print(" ".join(["%.2f" % x for x in line]), file=pofs)
         C.append(pred)
-        #for k in range(P.shape[0]):
-          #print("Seq%d" % k, "".join(["%d" % q for q in pred[k]]), file=mofs)
-    #mofs.close()
-    #pofs.close()
     C = numpy.array(C)
-    #print(C.shape)
     C = numpy.mean(C.T, axis=2).T
     k = 0
     for i in range(X.shape[0]):
