@@ -67,7 +67,7 @@ Source code available on GitHub at [https://github.com/BolognaBiocomp/deepsig](h
 
 #### Installation and configuration
 
-DeepSig is designed to run on Unix/Linux platforms. The software was written using the Python programming language and it was tested under the Python version 2.7.
+DeepSig is designed to run on Unix/Linux platforms. The software was written using the Python programming language and it was tested under the Python version 3.
 
 To obtain DeepSig, clone the repository from GitHub:
 
@@ -82,9 +82,9 @@ $ export DEEPSIG_ROOT='/path/to/deepsig'
 
 Before running the program, you need to install DeepSig dependencies. The following Python libraries are required:
 
-- biopython (version 1.72)
-- Keras (version 2.2.4)
-- Tensorflow (version 1.5.0)
+- biopython (version 1.78)
+- Keras (version 2.4.3)
+- Tensorflow (version 2.2)
 
 The best way to install all requirements is using pip. We provide a file "requirements.txt" which can be used to install all DeepSig dependecies using a single command. To do so, run:
 
@@ -92,7 +92,7 @@ The best way to install all requirements is using pip. We provide a file "requir
 $ pip install --no-cache-dir -r requirements.txt
 ```
 
-We suggest to use Conda or Virtualenv to create a Python virtual environment and activate it before running pip. In this way, all dependencies will be installed in the environment. 
+We suggest to use Conda or Virtualenv to create a Python virtual environment and activate it before running pip. In this way, all dependencies will be installed in the environment.
 
 Now you are able to use deepsig (see next Section). If you whish, you can copy the “deepsig.py” script to a directory in the users' PATH.
 
@@ -115,9 +115,9 @@ This will run deepsig on sequences contained in the "testdata/SPEuk.nr.fasta" fi
 Once the prediction is done, the output should look like the following:
 
 ```
-$ cat 
+$ cat
 G5ED35  SignaPeptide    0.98    20
-Q59XX2  SignaPeptide    1.0 21
+Q59XX2  SignaPeptide    1.0 17
 Q9VMD9  SignaPeptide    0.98    18
 Q4V4I9  SignaPeptide    0.98    22
 Q8SXL2  SignaPeptide    1.0 18
