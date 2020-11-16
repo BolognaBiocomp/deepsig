@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env -S python -W ignore
 # -*- coding: utf-8 -*-
 import sys
 import os
@@ -9,10 +9,9 @@ DESC="DeepSig: Predictor of signal peptides in proteins"
 
 import deepsiglib.deepsigconfig as cfg
 from deepsiglib.helpers import printDate
-from deepsiglib.helpers import SetUpTemporaryEnvironment
-from deepsiglib.helpers import DestroyTemporaryEnvironment
 from deepsiglib.helpers import readdata
 from deepsiglib.helpers import detectsp, predictsp, setUpTFCPU
+from deepsiglib import workenv
 
 pclasses = {2: 'SignalPeptide', 1: 'Transmembrane', 0: 'Other'}
 
@@ -31,16 +30,15 @@ def main():
 
   ns = parser.parse_args()
   try:
-    SetUpTemporaryEnvironment()
+    we = workenv.TemporaryEnv()
     printDate("Reading input data")
     X, accs  = readdata(ns.fasta, cfg.NTERM)
     printDate("Read %d protein sequences" % len(accs))
     printDate("Detecting signal peptides")
-    #cat setUpTFCPU(1)
     Y, Ytm, Ync, cls, Ytm_norm, Ync_norm = detectsp(X, ns.organism)
     printDate("Detected %d signal peptides" % cls.count(2))
     printDate("Predicting cleavage sites")
-    cleavage = predictsp(X, cls, ns.organism, cpu=1)
+    cleavage = predictsp(X, cls, ns.organism, we, cpu=1)
     printDate("Writing results to output file")
     ofs = open(ns.outf, 'w')
     for i in range(len(accs)):
@@ -57,8 +55,9 @@ def main():
     printDate("Leaving outdir unchanged")
     raise
   else:
-    DestroyTemporaryEnvironment()
+    #we.destroy()
     pass
+  sys.exit(0)
 
 if __name__ == "__main__":
   main()

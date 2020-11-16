@@ -14,34 +14,13 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.models import model_from_json, Model
 from keras import backend as K
 
-import deepsigconfig as cfg
-import crf
+from . import deepsigconfig as cfg
+from . import crfdecoding as crf
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 def printDate(msg):
-  print "[%s] %s" % (strftime("%a, %d %b %Y %H:%M:%S", localtime()), msg)
-
-def SetUpTemporaryEnvironment():
-  tempfile.tempdir = os.path.abspath(tempfile.mkdtemp(prefix="job.tmpd.",
-                                                      dir="."))
-  printDate("Setting up job temporary enviroment [%s]" % tempfile.tempdir)
-
-
-def DestroyTemporaryEnvironment():
-  if not tempfile.tempdir == None:
-    shutil.rmtree(tempfile.tempdir)
-    printDate("Destroying job temporary enviroment [%s]" % tempfile.tempdir)
-
-def getNewTmpFile(prefix, suffix):
-  outTmpFile = tempfile.NamedTemporaryFile(mode   = 'write',
-                                           prefix = prefix,
-                                           suffix = suffix,
-                                           delete = False)
-  outTmpFileName = outTmpFile.name
-  outTmpFile.close()
-  return outTmpFileName
-
+  print("[%s] %s" % (strftime("%a, %d %b %Y %H:%M:%S", localtime()), msg))
 
 def setUpTFCPU(cpus):
   import tensorflow as tf
@@ -95,14 +74,20 @@ def detectsp(X, organism):
   cls = [2*spc[i]+tmc[i] for i in range(Y.shape[0])]
   return Y, Ytm, Ync, cls, Ytm/(Ytm + Ync), 1.0 - Ytm/(Ytm + Ync)
 
-def runCRF(crf_datf, model, window, decoding, cpu=1):
-  crf_stdout = getNewTmpFile("crf_stdout", ".log")
-  crf_stderr = getNewTmpFile("crf_stderr", ".log")
+def runCRF(crf_datf, model, window, decoding, we, cpu=1):
+  #crf_stdout = getNewTmpFile("crf_stdout", ".log")
+  crf_stdout = we.createFile("crf_stdout", ".log")
+  #crf_stderr = getNewTmpFile("crf_stderr", ".log")
+  crf_stderr = we.createFile("crf_stderr", ".log")
   crf_bin = os.path.join(cfg.DEEPSIG_ROOT, 'tools', 'biocrf-static')
-  crf_outf   = getNewTmpFile("crf.", ".out")
+  #crf_outf   = getNewTmpFile("crf.", ".out")
+  crf_outf = we.createFile("crf.", ".out")
   subprocess.call([crf_bin, '-test', '-m', model, '-a', str(cpu),
                    '-w', '%d' % ( (window-1)/2), '-d', decoding,
-                   '-o', crf_outf, crf_datf],
+                   '-o', crf_outf,
+                   '-q', crf_outf + "_post",
+                    crf_datf],
+
                    stdout=open(crf_stdout, 'w'),
                    stderr=open(crf_stderr, 'w'))
 
@@ -120,11 +105,13 @@ def runCRF(crf_datf, model, window, decoding, cpu=1):
 def runCRF2(X, model, window, decoding, cpu=1):
   crfmodel = crf.CRF()
   crfmodel.parse(model)
-  rawpred = crfmodel.predict(X, algo=decoding, processors = cpu)
+  rawpred = crfmodel.predict(X, algo=decoding)
   pred = []
+  posterior = []
   for s in rawpred:
-    pred.append([int(x=='S') for x in s])
-  return pred
+    pred.append([int(x=='S') for x in s[0]])
+    posterior.append(s[1])
+  return pred, posterior
 
 def relevance(x, model, relout=2):
   weights  = model.get_weights()
@@ -195,7 +182,7 @@ def relevance(x, model, relout=2):
   Rx = numpy.sum(Rx, axis=1)
   return Rx
 
-def predictsp(X, cls, organism, cpu=1):
+def predictsp(X, cls, organism, we, cpu=1):
   P = []
   cleavage = []
   for k in range(X.shape[0]):
@@ -206,26 +193,42 @@ def predictsp(X, cls, organism, cpu=1):
 
   if len(P) > 0:
     P = numpy.array(P)
-    crf_datf = getNewTmpFile("crf.", ".dat")
+    #crf_datf = getNewTmpFile("crf.", ".dat")
+    crf_datf = we.createFile("crf.", ".dat")
     ofs = open(crf_datf, 'w')
     for i in range(P.shape[0]):
       for j in range(P.shape[1]):
-        ofs.write(" ".join(map(str, list(P[i][j])) + ['G']) + '\n')
+        ofs.write(" ".join([str(v) for v in list(P[i][j])] + ['G']))
+        ofs.write("\n")
+        #ofs.write(" ".join(map(str, list(P[i][j])) + ['G']) + '\n')
       ofs.write('\n')
     ofs.close()
+
+    #model_outputs = we.createFile("crf.",".model.outputs.txt")
+    #posterior_output = we.createFile("crf.",".model.posterior.txt")
+    #mofs = open(model_outputs, 'w')
+    #pofs = open(posterior_output, 'w')
     C = []
-    for i in range(5):
-      for j in range(4):
+    for i in range(1): #5
+      for j in range(1): #4
         crfmodel = os.path.join(cfg.DEEPSIG_ROOT,
                                 cfg.CRF_MODEL_DIR, organism,
                                 "model.seq.w%d.s%s.l%d.%d.%d" % (cfg.CRF_WINDOWS[organism],
                                                                      cfg.CRF_PARAMS[organism][i]['sigma'],
                                                                      cfg.NTERM,
                                                                      i, j))
-        pred = runCRF(crf_datf, crfmodel, cfg.CRF_WINDOWS[organism], cfg.CRF_PARAMS[organism][i]['decoding'], cpu=cpu)
-        #pred = runCRF2(P, crfmodel, cfg.CRF_WINDOWS[organism], cfg.CRF_PARAMS[organism][i]['decoding'], cpu=cpu)
+        pred = runCRF(crf_datf, crfmodel, cfg.CRF_WINDOWS[organism], cfg.CRF_PARAMS[organism][i]['decoding'], we, cpu=cpu)
+        #pred, posterior = runCRF2(P, crfmodel, cfg.CRF_WINDOWS[organism], cfg.CRF_PARAMS[organism][i]['decoding'], cpu=cpu)
+        #for seq in posterior:
+        #  for line in seq:
+        #    print(" ".join(["%.2f" % x for x in line]), file=pofs)
         C.append(pred)
+        #for k in range(P.shape[0]):
+          #print("Seq%d" % k, "".join(["%d" % q for q in pred[k]]), file=mofs)
+    #mofs.close()
+    #pofs.close()
     C = numpy.array(C)
+    #print(C.shape)
     C = numpy.mean(C.T, axis=2).T
     k = 0
     for i in range(X.shape[0]):

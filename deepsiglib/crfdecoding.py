@@ -1,8 +1,4 @@
 import numpy
-import multiprocessing
-import copy
-from scipy.optimize import fmin_l_bfgs_b
-
 
 class DuplicateLabelError(Exception):
     def __init__(self):
@@ -27,37 +23,6 @@ class UnknownLabelError(Exception):
 class CRFError(Exception):
     def __init__(self):
         pass
-
-
-class CRFDecoderProcess(multiprocessing.Process):
-    def __init__(self, queue, outqueue, model):
-        multiprocessing.Process.__init__(self)
-        self.model = model
-        self.queue = queue
-        self.outqueue = outqueue
-
-    def run(self):
-        while True:
-            ex = self.queue.get()
-            # self.model.sample = [ex[1]]
-            prediction = self.model.doPrediction(ex[1])
-            self.outqueue.put((ex[0], prediction))
-
-
-class CRFLLTrainerProcess(multiprocessing.Process):
-    def __init__(self, queue, outqueue, model):
-        multiprocessing.Process.__init__(self)
-        self.model = model
-        self.queue = queue
-        self.outqueue = outqueue
-
-    def run(self):
-        while True:
-            ex = self.queue.get()
-            self.model.sample = [ex[0]]
-            self.model.doLLComputation(ex[1])
-            self.outqueue.put((self.model.likelihood, self.model.gradient))
-
 
 class CRFState(object):
     def __init__(self, label=None):
@@ -131,7 +96,6 @@ class CRFState(object):
         if j >= 0 and j < len(self.scores):
             self.scores[j] *= numpy.exp(numpy.dot(self.weights[o], vector))
 
-
 class CRF(object):
     '''
     classdocs
@@ -188,7 +152,7 @@ class CRF(object):
             elif line[0] == 'TRANSITION_ALPHABET':
                 self.state_obj['BEGIN'] = CRFState(label='BEGL')
                 self.state_obj['END'] = CRFState(label='END')
-                self.allst = sorted(line[1:])
+                self.allst = line[1:] #sorted(line[1:])
                 for st in self.allst:
                     #if not self.labels.has_key(st):
                     if st not in self.state_obj:
@@ -234,21 +198,6 @@ class CRF(object):
             else:
                 pass
         self.windowSize = d * 2 + 1
-
-    def __deepcopy__(self, memo):
-        clone = CRF(windowSize=self.windowSize)
-        clone.state_obj = copy.deepcopy(self.state_obj, memo)
-        clone.labels = copy.deepcopy(self.labels, memo)
-        clone.allst = copy.deepcopy(self.allst, memo)
-        clone.dim = self.dim
-        clone.probdim = self.probdim
-        clone.numTransitions = self.numTransitions
-        clone.algo = self.algo
-        clone.transOrder = copy.deepcopy(self.transOrder, memo)
-        clone.tying = copy.deepcopy(self.tying, memo)
-        clone.sigma = self.sigma
-        return clone
-
     def __len__(self):
         return len(self.allst)
 
@@ -280,160 +229,8 @@ class CRF(object):
 
         return modStr
 
-    def writeModel(self, modelFile):
-        try:
-            of = open(modelFile, 'w')
-        except IOError:
-            print("Error opening/writing model file.")
-            raise
-        of.write(str(self))
-        of.close()
-
     def setWindowSize(self, w):
         self.windowSize = w
-
-    def initWeights(self, protocol="uniform"):
-        ret = None
-        if protocol == "uniform":
-            ret = numpy.zeros(self.probdim)
-        else:
-            pass
-        return ret
-
-    def setWeights(self, w):
-        for i in range(self.numTransitions):
-            s = self.transOrder[i][0]
-            t = self.transOrder[i][1]
-            self[s].setTransition(t, w[i])
-
-        d = (self.windowSize - 1) / 2
-        k = 0
-        for st in self.allst:
-            for i in range(-d, d + 1):
-                s = self.numTransitions + k * self.dim * self.windowSize + (i + d) * self.dim
-                e = self.numTransitions + k * self.dim * self.windowSize + (i + d + 1) * self.dim
-                self[st].setWeights(i, w[s:e])
-            k += 1
-
-    def getRegularization(self, w):
-        freg = -1 * numpy.sum(numpy.power(w, 2) / (2 * self.sigma))
-        greg = -1 * w / self.sigma
-        return freg, greg
-
-    def computeExpectations(self, matrix):
-        seqlen = len(matrix)
-
-        d = (self.windowSize - 1) / 2
-
-        Ex = numpy.zeros((len(self), self.dim * self.windowSize))
-        Eyx = numpy.zeros((len(self), self.dim * self.windowSize))
-        ExpTx = numpy.zeros(self.numTransitions)
-        ExpTyx = numpy.zeros(self.numTransitions)
-        for j in range(seqlen):
-            v = numpy.array([])
-            for o in range(-d, d + 1):
-                if j + o >= 0 and j + o < seqlen:
-                    v = numpy.append(v, matrix[j + o])
-                else:
-                    v = numpy.append(v, numpy.zeros(self.dim))
-            k = 0
-            for st in self.allst:
-                p = self.prob(st, j)
-                p_c = self.prob(st, j, clamped=True)
-                Ex[k] = numpy.add(Ex[k], p * v)
-                Eyx[k] = numpy.add(Eyx[k], p_c * v)
-
-                if j == 0:
-                    pt = self.prob('BEGIN', j, st)
-                    pt_c = self.prob('BEGIN', j, st, clamped=True)
-                    try:
-                        idx = self.transOrder.index(('BEGIN', st))
-                    except ValueError:
-                        pass
-                    else:
-                        ExpTx[idx] += pt
-                        ExpTyx[idx] += pt_c
-                elif j == seqlen - 1:
-                    pt = self.prob(st, j, 'END')
-                    pt_c = self.prob(st, j, 'END', clamped=True)
-                    try:
-                        idx = self.transOrder.index((st, 'END'))
-                    except ValueError:
-                        pass
-                    else:
-                        ExpTx[idx] += pt
-                        ExpTyx[idx] += pt_c
-                if j > 0:
-                    for t in self.allst:
-                        pt = self.prob(st, j, t)
-                        pt_c = self.prob(st, j, t, clamped=True)
-                        try:
-                            idx = self.transOrder.index((st, t))
-                        except ValueError:
-                            pass
-                        else:
-                            ExpTx[idx] += pt
-                            ExpTyx[idx] += pt_c
-                k += 1
-        Ex = numpy.append(ExpTx, numpy.ravel(Ex))
-        Eyx = numpy.append(ExpTyx, numpy.ravel(Eyx))
-        return Eyx, Ex
-
-    def computeLogLikelihood(self, w, processors):
-
-        fr, gr = self.getRegularization(w)
-        self.likelihood = fr
-        self.gradient = gr
-
-        for seq in self.sample:
-            self.queue.put((seq, w))
-
-        results = []
-        while len(results) < len(self.sample):
-            res = self.outqueue.get()
-            results.append(res)
-        for res in results:
-            self.likelihood += res[0]
-            self.gradient += res[1]
-
-        print("Current log-likelihood:", self.likelihood)
-        return -self.likelihood, -1 * self.gradient
-
-    def doLLComputation(self, w):
-        self.setWeights(w)
-        self.likelihood = 0.0
-        self.gradient = numpy.zeros(self.probdim)
-        for seq in self.sample:
-            matrix = seq[0]
-            labels = seq[1]
-            self.forwardBackward(matrix, labels=labels)
-            self.likelihood += numpy.log(self.Zyx) - numpy.log(self.Zx)
-            Eyx, Ex = self.computeExpectations(matrix)
-            self.gradient = numpy.add(self.gradient, numpy.add(Eyx, -1 * Ex))
-
-    def train(self, sample, iterations=60, eps=0.001, sigma=0.05, processors=1):
-
-        self.sample = sample
-        self.sigma = sigma
-        self.dim = len(sample[0][0][0])
-        self.probdim = len(self) * self.dim * self.windowSize + self.numTransitions
-
-        self.queue = multiprocessing.Queue()
-        self.outqueue = multiprocessing.Queue()
-
-        for j in range(processors):
-            model = copy.deepcopy(self)
-            t = CRFLLTrainerProcess(self.queue, self.outqueue, model)
-            t.daemon = True
-            t.start()
-
-        start = self.initWeights()
-        x, f, d = fmin_l_bfgs_b(self.computeLogLikelihood, start, m=7, args=(processors,), maxfun=iterations, iprint=-1)
-        print("Maximum log-likelihood :", -f)
-        print("Gradient vector norm   :", numpy.linalg.norm(d['grad']))
-        print("Parameter vector norm  :", numpy.linalg.norm(x))
-        self.likelihood = f
-        self.setWeights(x)
 
     def _probS(self, s, j, t=None, clamped=False):
         ret = 0.0
@@ -596,32 +393,20 @@ class CRF(object):
             prevs = list(allowed)
             prevs_c = list(allowed_c)
 
-    def predict(self, sample, algo='viterbi', be=True, processors=1):
-        self.sample = sample
-
-        self.queue = multiprocessing.Queue()
-        self.outqueue = multiprocessing.Queue()
-
+    def predict(self, sample, algo='viterbi', be=True):
         self.algo = algo
         self.be = be
-
-        for j in range(processors):
-            model = copy.deepcopy(self)
-            t = CRFDecoderProcess(self.queue, self.outqueue, model)
-            t.daemon = True
-            t.start()
-
-        for j in range(len(self.sample)):
-            self.queue.put((j, self.sample[j]))
-
         results = []
-
-        while len(results) < len(self.sample):
-            res = self.outqueue.get()
-            results.append(res)
-
-        results.sort()
-        return [x[1] for x in results]
+        for matrix in sample:
+            labelling = self.doPrediction(matrix)
+            posterior = []
+            for i in range(len(matrix)):
+                v = []
+                for st in self.allst:
+                    v.append(self.prob(st, i))
+                posterior.append(v)
+            results.append((labelling, posterior))
+        return results
 
     def doPrediction(self, matrix):
         ret = None
