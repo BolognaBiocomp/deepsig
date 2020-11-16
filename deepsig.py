@@ -1,4 +1,4 @@
-#!/usr/bin/env python -W ignore
+#!/usr/bin/env -S python -W ignore
 # -*- coding: utf-8 -*-
 import sys
 import os
