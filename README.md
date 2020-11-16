@@ -80,21 +80,33 @@ This will produce a directory “deepsig”. Before running deepsig you need to 
 $ export DEEPSIG_ROOT='/path/to/deepsig'
 ```
 
-Before running the program, you need to install DeepSig dependencies. The following Python libraries are required:
+Before running the program, you need to install DeepSig dependencies. We suggest to use Conda (we suggest [Miniconda3](https://docs.conda.io/en/latest/miniconda.html)) create a Python virtual environment and activate it.
+
+To create a conda env for deepsig:
+
+```
+$ conda create -n deepsig
+```
+To activate the environment:
+
+```
+$ conda activate deepsig
+```
+
+The following Python libraries are required:
 
 - biopython (version 1.78)
 - Keras (version 2.4.3)
 - Tensorflow (version 2.2)
 
-The best way to install all requirements is using pip. We provide a file "requirements.txt" which can be used to install all DeepSig dependecies using a single command. To do so, run:
+To install all requirements:
 
 ```
-$ pip install --no-cache-dir -r requirements.txt
+$ conda install --yes nomkl keras==2.4.3 biopython==1.78 tensorflow==2.2.0
 ```
 
-We suggest to use Conda or Virtualenv to create a Python virtual environment and activate it before running pip. In this way, all dependencies will be installed in the environment.
-
-Now you are able to use deepsig (see next Section). If you whish, you can copy the “deepsig.py” script to a directory in the users' PATH.
+Now you are able to use deepsig (see next Section). Remember to keep the environment active.
+If you whish, you can copy the “deepsig.py” script to a directory in the users' PATH.
 
 #### Usage
 
