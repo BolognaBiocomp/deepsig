@@ -72,7 +72,7 @@ DeepSig is designed to run on Unix/Linux platforms. The software was written usi
 To obtain DeepSig, clone the repository from GitHub:
 
 ```
-$ git clone https://github.com/savojard/deepsig.git
+$ git clone https://github.com/BolognaBiocomp/deepsig.git
 ```
 
 This will produce a directory “deepsig”. Before running deepsig you need to set and export a variable named DEEPSIG_ROOT to point to the deepsig installation dir:
