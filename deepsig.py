@@ -55,7 +55,7 @@ def main():
     printDate("Leaving outdir unchanged")
     raise
   else:
-    #we.destroy()
+    we.destroy()
     pass
   sys.exit(0)
 
