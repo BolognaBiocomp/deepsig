@@ -1,46 +1,88 @@
-G5ED35	SignalPeptide	0.98	20
-Q59XX2	SignalPeptide	1.0	21
-Q9VMD9	SignalPeptide	0.98	18
-Q4V4I9	SignalPeptide	0.98	22
-Q8SXL2	SignalPeptide	1.0	18
-F1NSM7	SignalPeptide	1.0	18
-Q9SUQ8	Transmembrane	0.94	-
-P0DKU2	Other	1.0	-
-C9K4X8	SignalPeptide	1.0	29
-Q9LRC8	SignalPeptide	0.96	25
-Q9N4D8	SignalPeptide	0.99	17
-F7J1C8	SignalPeptide	0.94	21
-Q8W257	SignalPeptide	0.96	21
-G4V4F9	SignalPeptide	1.0	19
-Q00870	SignalPeptide	0.99	19
-C4NZN9	SignalPeptide	1.0	16
-Q76FP5	SignalPeptide	0.93	20
-Q2U4L7	SignalPeptide	0.93	20
-Q4V645	SignalPeptide	0.99	29
-B0FHH8	SignalPeptide	1.0	18
-C5P3X6	SignalPeptide	0.99	18
-G5EC68	SignalPeptide	1.0	18
-C5J887	SignalPeptide	0.96	23
-Q7M3V1	SignalPeptide	0.98	18
-Q6Z232	SignalPeptide	1.0	21
-D4A540	SignalPeptide	0.87	31
-Q8J0D2	SignalPeptide	0.95	23
-A0A0F7YZQ7	SignalPeptide	0.99	24
-W1I921	SignalPeptide	1.0	26
-A0A0F7YYX3	Transmembrane	0.86	-
-P86797	SignalPeptide	1.0	19
-Q5JNJ5	SignalPeptide	0.76	28
-G9M8X1	SignalPeptide	1.0	19
-D3Z9M3	SignalPeptide	1.0	16
-P86407	SignalPeptide	0.78	22
-Q40975	SignalPeptide	0.97	19
-P0DMD3	SignalPeptide	0.99	24
-I6RU32	SignalPeptide	1.0	23
-I6S7G5	SignalPeptide	1.0	20
-I6S390	SignalPeptide	1.0	22
-I6RA76	SignalPeptide	1.0	18
-Q8WQK0	SignalPeptide	0.96	23
-C7G3K3	SignalPeptide	0.98	21
-P86872	SignalPeptide	0.97	19
-Q6ASY2	SignalPeptide	0.99	26
-P0DL40	Transmembrane	0.78	-
+G5ED35	DeepSig	Signal peptide	1	20	0.98	.	.	evidence=ECO:0000256
+G5ED35	DeepSig	Chain	21	135	.	.	.	evidence=ECO:0000256
+Q59XX2	DeepSig	Signal peptide	1	21	1.0	.	.	evidence=ECO:0000256
+Q59XX2	DeepSig	Chain	22	378	.	.	.	evidence=ECO:0000256
+Q9VMD9	DeepSig	Signal peptide	1	18	0.98	.	.	evidence=ECO:0000256
+Q9VMD9	DeepSig	Chain	19	2188	.	.	.	evidence=ECO:0000256
+Q4V4I9	DeepSig	Signal peptide	1	22	0.98	.	.	evidence=ECO:0000256
+Q4V4I9	DeepSig	Chain	23	182	.	.	.	evidence=ECO:0000256
+Q8SXL2	DeepSig	Signal peptide	1	18	1.0	.	.	evidence=ECO:0000256
+Q8SXL2	DeepSig	Chain	19	136	.	.	.	evidence=ECO:0000256
+F1NSM7	DeepSig	Signal peptide	1	18	1.0	.	.	evidence=ECO:0000256
+F1NSM7	DeepSig	Chain	19	743	.	.	.	evidence=ECO:0000256
+Q9SUQ8	DeepSig	Chain	1	187	.	.	.	evidence=ECO:0000256
+P0DKU2	DeepSig	Chain	1	145	.	.	.	evidence=ECO:0000256
+C9K4X8	DeepSig	Signal peptide	1	29	1.0	.	.	evidence=ECO:0000256
+C9K4X8	DeepSig	Chain	30	116	.	.	.	evidence=ECO:0000256
+Q9LRC8	DeepSig	Signal peptide	1	25	0.96	.	.	evidence=ECO:0000256
+Q9LRC8	DeepSig	Chain	26	527	.	.	.	evidence=ECO:0000256
+Q9N4D8	DeepSig	Signal peptide	1	17	0.99	.	.	evidence=ECO:0000256
+Q9N4D8	DeepSig	Chain	18	123	.	.	.	evidence=ECO:0000256
+F7J1C8	DeepSig	Signal peptide	1	21	0.94	.	.	evidence=ECO:0000256
+F7J1C8	DeepSig	Chain	22	249	.	.	.	evidence=ECO:0000256
+Q8W257	DeepSig	Signal peptide	1	21	0.96	.	.	evidence=ECO:0000256
+Q8W257	DeepSig	Chain	22	500	.	.	.	evidence=ECO:0000256
+G4V4F9	DeepSig	Signal peptide	1	19	1.0	.	.	evidence=ECO:0000256
+G4V4F9	DeepSig	Chain	20	97	.	.	.	evidence=ECO:0000256
+Q00870	DeepSig	Signal peptide	1	19	0.99	.	.	evidence=ECO:0000256
+Q00870	DeepSig	Chain	20	350	.	.	.	evidence=ECO:0000256
+C4NZN9	DeepSig	Signal peptide	1	16	1.0	.	.	evidence=ECO:0000256
+C4NZN9	DeepSig	Chain	17	131	.	.	.	evidence=ECO:0000256
+Q76FP5	DeepSig	Signal peptide	1	20	0.93	.	.	evidence=ECO:0000256
+Q76FP5	DeepSig	Chain	21	479	.	.	.	evidence=ECO:0000256
+Q2U4L7	DeepSig	Signal peptide	1	20	0.93	.	.	evidence=ECO:0000256
+Q2U4L7	DeepSig	Chain	21	690	.	.	.	evidence=ECO:0000256
+Q4V645	DeepSig	Signal peptide	1	29	0.99	.	.	evidence=ECO:0000256
+Q4V645	DeepSig	Chain	30	108	.	.	.	evidence=ECO:0000256
+B0FHH8	DeepSig	Signal peptide	1	18	1.0	.	.	evidence=ECO:0000256
+B0FHH8	DeepSig	Chain	19	151	.	.	.	evidence=ECO:0000256
+C5P3X6	DeepSig	Signal peptide	1	18	0.99	.	.	evidence=ECO:0000256
+C5P3X6	DeepSig	Chain	19	276	.	.	.	evidence=ECO:0000256
+G5EC68	DeepSig	Signal peptide	1	18	1.0	.	.	evidence=ECO:0000256
+G5EC68	DeepSig	Chain	19	85	.	.	.	evidence=ECO:0000256
+C5J887	DeepSig	Signal peptide	1	23	0.96	.	.	evidence=ECO:0000256
+C5J887	DeepSig	Chain	24	69	.	.	.	evidence=ECO:0000256
+Q7M3V1	DeepSig	Signal peptide	1	18	0.98	.	.	evidence=ECO:0000256
+Q7M3V1	DeepSig	Chain	19	246	.	.	.	evidence=ECO:0000256
+Q6Z232	DeepSig	Signal peptide	1	21	1.0	.	.	evidence=ECO:0000256
+Q6Z232	DeepSig	Chain	22	146	.	.	.	evidence=ECO:0000256
+D4A540	DeepSig	Signal peptide	1	31	0.87	.	.	evidence=ECO:0000256
+D4A540	DeepSig	Chain	32	148	.	.	.	evidence=ECO:0000256
+Q8J0D2	DeepSig	Signal peptide	1	23	0.95	.	.	evidence=ECO:0000256
+Q8J0D2	DeepSig	Chain	24	812	.	.	.	evidence=ECO:0000256
+A0A0F7YZQ7	DeepSig	Signal peptide	1	24	0.99	.	.	evidence=ECO:0000256
+A0A0F7YZQ7	DeepSig	Chain	25	100	.	.	.	evidence=ECO:0000256
+W1I921	DeepSig	Signal peptide	1	26	1.0	.	.	evidence=ECO:0000256
+W1I921	DeepSig	Chain	27	184	.	.	.	evidence=ECO:0000256
+A0A0F7YYX3	DeepSig	Chain	1	196	.	.	.	evidence=ECO:0000256
+P86797	DeepSig	Signal peptide	1	19	1.0	.	.	evidence=ECO:0000256
+P86797	DeepSig	Chain	20	142	.	.	.	evidence=ECO:0000256
+Q5JNJ5	DeepSig	Signal peptide	1	28	0.76	.	.	evidence=ECO:0000256
+Q5JNJ5	DeepSig	Chain	29	237	.	.	.	evidence=ECO:0000256
+G9M8X1	DeepSig	Signal peptide	1	19	1.0	.	.	evidence=ECO:0000256
+G9M8X1	DeepSig	Chain	20	687	.	.	.	evidence=ECO:0000256
+D3Z9M3	DeepSig	Signal peptide	1	16	1.0	.	.	evidence=ECO:0000256
+D3Z9M3	DeepSig	Chain	17	109	.	.	.	evidence=ECO:0000256
+P86407	DeepSig	Signal peptide	1	22	0.78	.	.	evidence=ECO:0000256
+P86407	DeepSig	Chain	23	75	.	.	.	evidence=ECO:0000256
+Q40975	DeepSig	Signal peptide	1	19	0.97	.	.	evidence=ECO:0000256
+Q40975	DeepSig	Chain	20	139	.	.	.	evidence=ECO:0000256
+P0DMD3	DeepSig	Signal peptide	1	24	0.99	.	.	evidence=ECO:0000256
+P0DMD3	DeepSig	Chain	25	105	.	.	.	evidence=ECO:0000256
+I6RU32	DeepSig	Signal peptide	1	23	1.0	.	.	evidence=ECO:0000256
+I6RU32	DeepSig	Chain	24	74	.	.	.	evidence=ECO:0000256
+I6S7G5	DeepSig	Signal peptide	1	20	1.0	.	.	evidence=ECO:0000256
+I6S7G5	DeepSig	Chain	21	84	.	.	.	evidence=ECO:0000256
+I6S390	DeepSig	Signal peptide	1	22	1.0	.	.	evidence=ECO:0000256
+I6S390	DeepSig	Chain	23	76	.	.	.	evidence=ECO:0000256
+I6RA76	DeepSig	Signal peptide	1	18	1.0	.	.	evidence=ECO:0000256
+I6RA76	DeepSig	Chain	19	64	.	.	.	evidence=ECO:0000256
+Q8WQK0	DeepSig	Signal peptide	1	23	0.96	.	.	evidence=ECO:0000256
+Q8WQK0	DeepSig	Chain	24	65	.	.	.	evidence=ECO:0000256
+C7G3K3	DeepSig	Signal peptide	1	21	0.98	.	.	evidence=ECO:0000256
+C7G3K3	DeepSig	Chain	22	80	.	.	.	evidence=ECO:0000256
+P86872	DeepSig	Signal peptide	1	19	0.97	.	.	evidence=ECO:0000256
+P86872	DeepSig	Chain	20	260	.	.	.	evidence=ECO:0000256
+Q6ASY2	DeepSig	Signal peptide	1	26	0.99	.	.	evidence=ECO:0000256
+Q6ASY2	DeepSig	Chain	27	178	.	.	.	evidence=ECO:0000256
+P0DL40	DeepSig	Chain	1	67	.	.	.	evidence=ECO:0000256
