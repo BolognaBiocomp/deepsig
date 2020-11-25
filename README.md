@@ -136,7 +136,8 @@ This will run deepsig on sequences contained in the "testdata/SPEuk.nr.fasta" fi
 Once the prediction is done, the GFF3 output should look like the following:
 
 ```
-$ cat
+$ cat testdata/SPEuk.nr.out
+##gff-version 3
 G5ED35	DeepSig	Signal peptide	1	20	0.98	.	.	evidence=ECO:0000256
 G5ED35	DeepSig	Chain	21	135	.	.	.	evidence=ECO:0000256
 Q59XX2	DeepSig	Signal peptide	1	21	1.0	.	.	evidence=ECO:0000256
