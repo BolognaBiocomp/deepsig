@@ -8,7 +8,7 @@ import argparse
 DESC="DeepSig: Predictor of signal peptides in proteins"
 
 import deepsiglib.deepsigconfig as cfg
-from deepsiglib.helpers import printDate
+from deepsiglib.helpers import printDate, write_gff_output
 from deepsiglib.helpers import readdata
 from deepsiglib.helpers import detectsp, predictsp, setUpTFCPU
 from deepsiglib import workenv
@@ -21,7 +21,7 @@ def main():
                       help = "The input multi-FASTA file name",
                       dest = "fasta", required = True)
   parser.add_argument("-o", "--outf",
-                      help = "The output tabular file",
+                      help = "The output GFF3 file",
                       dest = "outf", required = True)
   parser.add_argument("-k", "--organism",
                       help = "The organism the sequences belongs to",
@@ -32,7 +32,7 @@ def main():
   try:
     we = workenv.TemporaryEnv()
     printDate("Reading input data")
-    X, accs  = readdata(ns.fasta, cfg.NTERM)
+    X, accs, seqs  = readdata(ns.fasta, cfg.NTERM)
     printDate("Read %d protein sequences" % len(accs))
     printDate("Detecting signal peptides")
     Y, Ytm, Ync, cls, Ytm_norm, Ync_norm = detectsp(X, ns.organism)
@@ -48,7 +48,8 @@ def main():
         reliability = Ytm_norm[i]
       else:
         reliability = Ync_norm[i]
-      ofs.write("\t".join([accs[i], pclasses[cls[i]], str(round(reliability,2)), str(cleavage[i])]) + '\n')
+      write_gff_output(accs[i], seqs[i], ofs, pclasses[cls[i]], reliability, cleavage[i])
+      #ofs.write("\t".join([accs[i], pclasses[cls[i]], str(round(reliability,2)), str(cleavage[i])]) + '\n')
     ofs.close()
   except:
     printDate("Errors occured during execution")

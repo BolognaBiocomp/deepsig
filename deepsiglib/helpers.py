@@ -45,12 +45,13 @@ def seq2pssm(sequence, maxlen):
   return M
 
 def readdata(filename, maxlen):
-  X, accs = [], []
+  X, accs, seqs = [], [], []
   for record in SeqIO.parse(filename, 'fasta'):
     accs.append(record.id)
     X.append(seq2pssm(str(record.seq).replace("U", "C"), maxlen))
+    seqs.append(str(record.seq))
   X = numpy.array(pad_sequences(X, padding='post', maxlen=maxlen))
-  return X, accs
+  return X, accs, seqs
 
 def detectsp(X, organism):
   Y = []
@@ -226,3 +227,15 @@ def predictsp(X, cls, organism, we, cpu=1):
   else:
     cleavage.extend(["-"]*len(cls))
   return cleavage
+
+def write_gff_output(acc, sequence, output_file, p_class, prob, cleavage):
+  l = len(sequence)
+  if p_class == "SignalPeptide":
+    print(acc, "DeepSig", "Signal peptide", 1, cleavage, round(prob,2), ".", ".",
+          "evidence=ECO:0000256",
+          sep = "\t", file = output_file)
+    print(acc, "DeepSig", "Chain", int(cleavage)+1, l, ".", ".", ".", "evidence=ECO:0000256",
+          sep = "\t", file = output_file)
+  else:
+    print(acc, "DeepSig", "Chain", 1, l, ".", ".", ".", "evidence=ECO:0000256",
+          sep = "\t", file = output_file)

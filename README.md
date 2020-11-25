@@ -42,7 +42,7 @@ The program accepts three mandatory arguments:
 Let's now try a concrete example. First of all, let's downlaod an example sequence from UniProtKB, e.g. the Transthyretin-like protein 52 form Caenorhabditis elegans with accession G5ED35:
 
 ```
-$ wget http://www.uniprot.org/uniprot/G5ED35.fasta
+$ wget https://www.uniprot.org/uniprot/G5ED35.fasta
 ```
 
 Now, we are ready to predict the signal peptide of our input protein. Run:
@@ -52,14 +52,23 @@ $ docker run -v $(pwd):/data/ bolognabiocomp/deepsig -f G5ED35.fasta -o G5ED35.o
 ```
 
 In the example above, we are mapping the current program working directory ($(pwd)) to the /data/ folder inside the container. This will allow the container to see the external FASTA file G5ED35.fasta.
-The file G5ED35.out now contains the DeepSig prediction:
+The file G5ED35.out now contains the DeepSig prediction, in GFF3 format:
 ```
 $ cat G5ED35.out
 
-sp|G5ED35|TTR52_CAEEL   SignalPeptide   0.98    20
-```
-The first column is the protein accession/id as reported in the input fasta file. The second column report the result of signal peptide detection. Three different outcomes are possible: SignalPeptide (i.e. a signal sequence is detected at the N-terminus of the protein), Transmembrane (i.e. a transmembrane region is detected at the N-terminus) or Other (i.e. neither a signal sequence nor a transmembrane region are detected). The third column is a reliabilty score attached to the previous prediction. Finally, the fourth column reports, for those proteins predicted as having a signal peptide, the predicted position of the cleavage site.
+sp|G5ED35|TTR52_CAEEL	DeepSig	Signal peptide	1	20	0.98	.	.	evidence=ECO:0000256
+sp|G5ED35|TTR52_CAEEL	DeepSig	Chain	21	135	.	.	.	evidence=ECO:0000256
 
+```
+Columns are as follows:
+- Column 1: the protein ID/accession as reported in the FASTA input file;
+- Column 2: the name of tool performing the annotation (i.e. DeepSig)
+- Column 3: the annotated feature alogn the sequence. Can be "Signal peptide" or "Chain" (indicating the mature protein). When no signal peptide is detected, the entire protein sequence is annotated as "Chain";
+- Column 4: start position of the feature;
+- Column 5: end position of the feature;
+- Column 6: feature annotation score (as assigned by DeepSig);
+- Columns 7,8: always empty, reported for compliance with GFF3 format
+- Column 9: Description field. Report the evidence code for the annotation (i.e. ECO:0000256, automatic annotation).
 
 ### Install and use DeepSig from source
 
@@ -124,22 +133,36 @@ $ ./deepsig.py -f testdata/SPEuk.nr.fasta -k euk -o testdata/SPEuk.nr.out
 
 This will run deepsig on sequences contained in the "testdata/SPEuk.nr.fasta" file, using the Eukaryotes models and storing the output in the "testdata/SPEuk.nr.out" file.
 
-Once the prediction is done, the output should look like the following:
+Once the prediction is done, the GFF3 output should look like the following:
 
 ```
 $ cat
-G5ED35  SignaPeptide    0.98    20
-Q59XX2  SignaPeptide    1.0 17
-Q9VMD9  SignaPeptide    0.98    18
-Q4V4I9  SignaPeptide    0.98    22
-Q8SXL2  SignaPeptide    1.0 18
-F1NSM7  SignaPeptide    1.0 18
-Q9SUQ8  Transmembrane   0.94    -
-P0DKU2  Other   1.0 -
-C9K4X8  SignaPeptide    1.0 29
-Q9LRC8  SignaPeptide    0.96    25
+G5ED35	DeepSig	Signal peptide	1	20	0.98	.	.	evidence=ECO:0000256
+G5ED35	DeepSig	Chain	21	135	.	.	.	evidence=ECO:0000256
+Q59XX2	DeepSig	Signal peptide	1	21	1.0	.	.	evidence=ECO:0000256
+Q59XX2	DeepSig	Chain	22	378	.	.	.	evidence=ECO:0000256
+Q9VMD9	DeepSig	Signal peptide	1	18	0.98	.	.	evidence=ECO:0000256
+Q9VMD9	DeepSig	Chain	19	2188	.	.	.	evidence=ECO:0000256
+Q4V4I9	DeepSig	Signal peptide	1	22	0.98	.	.	evidence=ECO:0000256
+Q4V4I9	DeepSig	Chain	23	182	.	.	.	evidence=ECO:0000256
+Q8SXL2	DeepSig	Signal peptide	1	18	1.0	.	.	evidence=ECO:0000256
+Q8SXL2	DeepSig	Chain	19	136	.	.	.	evidence=ECO:0000256
+F1NSM7	DeepSig	Signal peptide	1	18	1.0	.	.	evidence=ECO:0000256
+F1NSM7	DeepSig	Chain	19	743	.	.	.	evidence=ECO:0000256
+Q9SUQ8	DeepSig	Chain	1	187	.	.	.	evidence=ECO:0000256
+P0DKU2	DeepSig	Chain	1	145	.	.	.	evidence=ECO:0000256
+C9K4X8	DeepSig	Signal peptide	1	29	1.0	.	.	evidence=ECO:0000256
+C9K4X8	DeepSig	Chain	30	116	.	.	.	evidence=ECO:0000256
 ....
 ```
-The first column is the protein accession/id as reported in the input fasta file. The second column report the result of signal peptide detection. Three different outcomes are possible: 1. SignalPeptide (i.e. a signal sequence is detected at the N-terminus of the protein); 2. Transmembrane (i.e. a transmembrane region is detected at the N-terminus) 3. Other (i.e. no signal sequence nor transmembrane region are detected). The third column is a reliabilty score attached to the previous prediction. Finally, the fourth column reports, for those proteins predicted as having a signal peptide, the predicted position of the cleavage site.
+Columns are as follows:
+- Column 1: the protein ID/accession as reported in the FASTA input file;
+- Column 2: the name of tool performing the annotation (i.e. DeepSig)
+- Column 3: the annotated feature alogn the sequence. Can be "Signal peptide" or "Chain" (indicating the mature protein). When no signal peptide is detected, the entire protein sequence is annotated as "Chain";
+- Column 4: start position of the feature;
+- Column 5: end position of the feature;
+- Column 6: feature annotation score (as assigned by DeepSig);
+- Columns 7,8: always empty, reported for compliance with GFF3 format
+- Column 9: Description field. Report the evidence code for the annotation (i.e. ECO:0000256, automatic annotation).
 
-Please, reports bugs to: savojard@biocomp.unibo.it
+Please, reports bugs to: castrense.savojardo2@unibo.it
