@@ -239,3 +239,49 @@ def write_gff_output(acc, sequence, output_file, p_class, prob, cleavage):
   else:
     print(acc, "DeepSig", "Chain", 1, l, ".", ".", ".", "evidence=ECO:0000256",
           sep = "\t", file = output_file)
+
+def get_json_output(acc, sequence, p_class, prob, cleavage):
+  acc_json = {'accession': acc, 'features': []}
+  acc_json['sequence'] = {
+                            "length": len(sequence),
+                            "sequence": sequence
+                         }
+  start = 1
+  score = round(float(prob),2)
+  if p_class == "SignalPeptide":
+    acc_json['features'].append({
+        "type": "SIGNAL",
+        "category": "MOLECULE_PROCESSING",
+        "description": "",
+        "begin": start,
+        "end": cleavage,
+        "score": score,
+        "evidences": [
+          {
+            "code": "ECO:0000255",
+            "source": {
+              "name": "SAM",
+              "id": "DeepSig",
+              "url": "https://deepsig.biocomp.unibo.it"
+            }
+          }
+        ]
+      })
+    acc_json['features'].append({
+        "type": "CHAIN",
+        "category": "MOLECULE_PROCESSING",
+        "description": "Mature protein",
+        "begin": cleavage+1,
+        "end": len(sequence),
+        "evidences": [
+          {
+            "code": "ECO:0000255",
+            "source": {
+              "name": "SAM",
+              "id": "DeepSig",
+              "url": "https://deepsig.biocomp.unibo.it"
+            }
+          }
+        ]
+      })
+  return acc_json
