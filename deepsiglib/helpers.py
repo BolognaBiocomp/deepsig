@@ -258,7 +258,7 @@ def get_json_output(acc, sequence, p_class, prob, cleavage):
         "score": score,
         "evidences": [
           {
-            "code": "ECO:0000255",
+            "code": "ECO:0000256",
             "source": {
               "name": "SAM",
               "id": "DeepSig",
@@ -275,7 +275,7 @@ def get_json_output(acc, sequence, p_class, prob, cleavage):
         "end": len(sequence),
         "evidences": [
           {
-            "code": "ECO:0000255",
+            "code": "ECO:0000256",
             "source": {
               "name": "SAM",
               "id": "DeepSig",
