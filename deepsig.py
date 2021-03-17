@@ -4,11 +4,12 @@ import sys
 import os
 sys.path.append(os.environ['DEEPSIG_ROOT'])
 import argparse
+import json
 
 DESC="DeepSig: Predictor of signal peptides in proteins"
 
 import deepsiglib.deepsigconfig as cfg
-from deepsiglib.helpers import printDate, write_gff_output
+from deepsiglib.helpers import printDate, write_gff_output, get_json_output
 from deepsiglib.helpers import readdata
 from deepsiglib.helpers import detectsp, predictsp, setUpTFCPU
 from deepsiglib import workenv
@@ -21,14 +22,18 @@ def main():
                       help = "The input multi-FASTA file name",
                       dest = "fasta", required = True)
   parser.add_argument("-o", "--outf",
-                      help = "The output GFF3 file",
+                      help = "The output file",
                       dest = "outf", required = True)
   parser.add_argument("-k", "--organism",
                       help = "The organism the sequences belongs to",
                       choices=['euk', 'gramp', 'gramn'],
                       dest = "organism", required = True)
+  parser.add_argument("-m", "--outfmt",
+                      help = "The output format: json or gff3 (default)",
+                      choices=['json', 'gff3'], required = False, default = "gff3")
 
   ns = parser.parse_args()
+  protein_jsons = []
   try:
     we = workenv.TemporaryEnv()
     printDate("Reading input data")
@@ -48,9 +53,17 @@ def main():
         reliability = Ytm_norm[i]
       else:
         reliability = Ync_norm[i]
-      write_gff_output(accs[i], seqs[i], ofs, pclasses[cls[i]], reliability, cleavage[i])
+      if ns.outfmt == "gff3":
+        write_gff_output(accs[i], seqs[i], ofs, pclasses[cls[i]], reliability, cleavage[i])
+      else:
+        acc_json = get_json_output(accs[i], seqs[i], pclasses[cls[i]], reliability, cleavage[i])
+        protein_jsons.append(acc_json)
       #ofs.write("\t".join([accs[i], pclasses[cls[i]], str(round(reliability,2)), str(cleavage[i])]) + '\n')
     ofs.close()
+    if ns.outfmt == "json":
+      ofs = open(ns.outf, 'w')
+      json.dump(protein_jsons, ofs, indent=5)
+      ofs.close()
   except:
     printDate("Errors occured during execution")
     printDate("Leaving outdir unchanged")
