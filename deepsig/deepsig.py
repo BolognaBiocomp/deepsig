@@ -9,7 +9,7 @@ DESC = "DeepSig: Predictor of signal peptides in proteins"
 
 import deepsig
 import deepsig.deepsigconfig as cfg
-from deepsig.workenv import workenv
+from deepsig import workenv
 from deepsig.helpers import readdata, printDate, write_gff_output, get_json_output, detectsp, predictsp
 
 pclasses = {2: 'SignalPeptide', 1: 'Transmembrane', 0: 'Other'}
