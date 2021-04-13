@@ -2,19 +2,18 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
-sys.path.append(os.environ['DEEPSIG_ROOT'])
 import argparse
 import json
 
-DESC="DeepSig: Predictor of signal peptides in proteins"
+DESC = "DeepSig: Predictor of signal peptides in proteins"
 
-import deepsiglib.deepsigconfig as cfg
-from deepsiglib.helpers import printDate, write_gff_output, get_json_output
-from deepsiglib.helpers import readdata
-from deepsiglib.helpers import detectsp, predictsp, setUpTFCPU
-from deepsiglib import workenv
+import deepsig
+import deepsig.deepsigconfig as cfg
+from deepsig.workenv import workenv
+from deepsig.helpers import readdata, printDate, write_gff_output, get_json_output, detectsp, predictsp
 
 pclasses = {2: 'SignalPeptide', 1: 'Transmembrane', 0: 'Other'}
+sys.path.append(os.environ['DEEPSIG_ROOT'])
 
 def main():
   parser = argparse.ArgumentParser(description=DESC)
