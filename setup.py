@@ -19,7 +19,7 @@ setup(
     long_description_content_type='text/markdown',
     license='GPLv3',
     author='Castrense Savojardo',
-    author_email='oliver.schwengers@computational.bio.uni-giessen.de',
+    author_email='savojard@biocomp.unibo.it',
     url='https://github.com/BolognaBiocomp/deepsig',
     packages=find_packages(include=['deepsig']),
     python_requires='>=3.8',
