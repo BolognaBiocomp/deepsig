@@ -4,6 +4,7 @@ import sys
 import os
 import argparse
 import json
+from pathlib import Path
 
 DESC = "DeepSig: Predictor of signal peptides in proteins"
 
@@ -13,7 +14,23 @@ from deepsig import workenv
 from deepsig.helpers import readdata, printDate, write_gff_output, get_json_output, detectsp, predictsp
 
 pclasses = {2: 'SignalPeptide', 1: 'Transmembrane', 0: 'Other'}
-sys.path.append(os.environ['DEEPSIG_ROOT'])
+
+if('DEEPSIG_ROOT' in os.environ):
+  try:
+      deepsig_root = os.environ['DEEPSIG_ROOT']
+      deepsig_root_path = Path(deepsig_root).resolve()
+      if(not deepsig_root_path.is_dir()):
+          raise IOError()
+      elif(not deepsig_root_path.resolve(cfg.DNN_MODEL_DIR).is_dir()):
+          raise IOError()
+      elif(not deepsig_root_path.resolve(cfg.CRF_MODEL_DIR).is_dir()):
+          raise IOError()
+      else:
+        sys.path.append(deepsig_root)
+  except:
+      sys.exit(f'ERROR: wrong DeepSig root path! DEEPSIG_ROOT={deepsig_root}')
+else:
+  sys.exit("ERROR: required environment variable 'DEEPSIG_ROOT' is not set")
 
 def main():
   parser = argparse.ArgumentParser(description=DESC)
