@@ -1,0 +1,9 @@
+name: deepsig
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - biopython>=1.78
+  - Keras>=2.4.3
+  - tensorflow>=2.2.0
