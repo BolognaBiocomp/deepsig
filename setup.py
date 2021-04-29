@@ -1,18 +1,18 @@
 
 from os import path
 from setuptools import setup, find_packages
-import deepsig
+#import deepsig
 
 
 # Get the long description from the README file
 setup_dir = path.abspath(path.dirname(__file__))
-with open(path.join(setup_dir, 'README.md'), encoding='utf-8') as f:
+with open(path.join(setup_dir, 'README.pypi.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 
 setup(
-    name='deepsig',
-    version=deepsig.__version__,
+    name='deepsig-biocomp',
+    version='0.9.1',
     description='DeepSig - Predictor of signal peptides in proteins based on deep learning',
     keywords=['bioinformatics', 'annotation', 'bacteria', 'signal peptides'],
     long_description=long_description,
@@ -28,7 +28,7 @@ setup(
     install_requires=[
         'biopython >= 1.78',
         'Keras >= 2.4.3',
-        'tensorflow >= 2.2.0'
+        'tensorflow'
     ],
     entry_points={
         'console_scripts': [
