@@ -1,7 +1,7 @@
 
 from os import path
 from setuptools import setup, find_packages
-#import deepsig
+import deepsig
 
 
 # Get the long description from the README file
@@ -12,7 +12,7 @@ with open(path.join(setup_dir, 'README.pypi.md'), encoding='utf-8') as f:
 
 setup(
     name='deepsig-biocomp',
-    version='1.1',
+    version=deepsig.__version__,
     description='DeepSig - Predictor of signal peptides in proteins based on deep learning',
     keywords=['bioinformatics', 'annotation', 'bacteria', 'signal peptides'],
     long_description=long_description,
