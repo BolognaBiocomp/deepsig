@@ -47,7 +47,10 @@ def main():
   parser.add_argument("-m", "--outfmt",
                       help = "The output format: json or gff3 (default)",
                       choices=['json', 'gff3'], required = False, default = "gff3")
+
   parser.add_argument('-t', '--threads', action='store', type=int, default=mp.cpu_count(), help='Number of threads to use (default = number of available CPUs)')
+
+  parser.add_argument('--version', action='version', version=deepsig.__version__)
 
   ns = parser.parse_args()
   protein_jsons = []
