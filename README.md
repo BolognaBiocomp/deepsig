@@ -20,6 +20,16 @@ export DEEPSIG_ROOT=$(pwd)
 
 ```
 
+### Installation using Bioconda
+
+
+Install deepsig using conda:
+
+```
+conda install -c bioconda deepsig
+
+```
+
 #### Usage
 ```
 $ deepsig -h
