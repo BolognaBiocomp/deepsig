@@ -48,6 +48,10 @@ def main():
                       help = "The output format: json or gff3 (default)",
                       choices=['json', 'gff3'], required = False, default = "gff3")
 
+  parser.add_argument('-t', '--threads', action='store', type=int, default=mp.cpu_count(), help='Number of threads to use (default = number of available CPUs)')
+
+  parser.add_argument('--version', action='version', version=deepsig.__version__)
+
   ns = parser.parse_args()
   protein_jsons = []
   try:
@@ -59,7 +63,7 @@ def main():
     Y, Ytm, Ync, cls, Ytm_norm, Ync_norm = detectsp(X, ns.organism)
     printDate("Detected %d signal peptides" % cls.count(2))
     printDate("Predicting cleavage sites")
-    cleavage = predictsp(X, cls, ns.organism, we, cpu=1)
+    cleavage = predictsp(X, cls, ns.organism, we, cpu=ns.threads)
     printDate("Writing results to output file")
     ofs = open(ns.outf, 'w')
     for i in range(len(accs)):
