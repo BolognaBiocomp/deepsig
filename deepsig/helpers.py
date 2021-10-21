@@ -86,7 +86,6 @@ def runCRF(crf_datf, model, window, decoding, we, cpu=1):
   subprocess.call([crf_bin, '-test', '-m', model, '-a', str(cpu),
                    '-w', '%d' % ( (window-1)/2), '-d', decoding,
                    '-o', crf_outf,
-                   '-q', crf_outf + "_post",
                     crf_datf],
 
                    stdout=open(crf_stdout, 'w'),
