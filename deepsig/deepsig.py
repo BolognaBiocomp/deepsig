@@ -5,6 +5,7 @@ import os
 import argparse
 import json
 from pathlib import Path
+import multiprocessing as mp
 
 DESC = "DeepSig: Predictor of signal peptides in proteins"
 
