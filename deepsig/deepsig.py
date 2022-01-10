@@ -12,7 +12,7 @@ DESC = "DeepSig: Predictor of signal peptides in proteins"
 import deepsig
 import deepsig.deepsigconfig as cfg
 from deepsig import workenv
-from deepsig.helpers import readdata, printDate, write_gff_output, get_json_output, detectsp, predictsp
+from deepsig.helpers import setUpTFCPU, readdata, printDate, write_gff_output, get_json_output, detectsp, predictsp
 
 pclasses = {2: 'SignalPeptide', 1: 'Transmembrane', 0: 'Other'}
 
@@ -54,6 +54,9 @@ def main():
   parser.add_argument('--version', action='version', version=deepsig.__version__)
 
   ns = parser.parse_args()
+
+  setUpTFCPU(ns.threads)
+
   protein_jsons = []
   try:
     we = workenv.TemporaryEnv()

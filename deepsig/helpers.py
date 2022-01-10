@@ -23,13 +23,9 @@ def printDate(msg):
   print("[%s] %s" % (strftime("%a, %d %b %Y %H:%M:%S", localtime()), msg))
 
 def setUpTFCPU(cpus):
-  import tensorflow as tf
-  from keras.backend.tensorflow_backend import set_session
-  config = tf.ConfigProto(intra_op_parallelism_threads=cpus,
-                          inter_op_parallelism_threads=cpus,
-                          allow_soft_placement=True,
-                          device_count = {'CPU': cpus})
-  set_session(tf.Session(config=config))
+  os.environ["OMP_NUM_THREADS"] = str(cpus)
+  os.environ['TF_NUM_INTEROP_THREADS'] = "1"
+  os.environ['TF_NUM_INTRAOP_THREADS'] = "1"
 
 def seq2pssm(sequence, maxlen):
   aaOrder = 'VLIMFWYGAPSTCHRKQEND'
