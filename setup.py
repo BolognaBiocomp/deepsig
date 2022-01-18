@@ -27,8 +27,8 @@ setup(
     zip_safe=False,
     install_requires=[
         'biopython >= 1.78',
-        'Keras >= 2.4.3',
-        'tensorflow'
+        'keras >= 2.6.0, <2.7',
+        'tensorflow >= 2.6.2, <2.7'
     ],
     entry_points={
         'console_scripts': [
