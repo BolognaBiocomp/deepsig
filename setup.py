@@ -22,7 +22,7 @@ setup(
     author_email='savojard@biocomp.unibo.it',
     url='https://github.com/BolognaBiocomp/deepsig',
     packages=find_packages(include=['deepsig']),
-    python_requires='>=3.8,<3.9',
+    python_requires='>=3.8',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
