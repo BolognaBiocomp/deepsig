@@ -42,4 +42,6 @@ jobs:
     - name: Install DeepSig
       run: python -m pip install --no-deps .
     - name: Run Test
+      env:
+        DEEPSIG_ROOT: $GITHUB_WORKSPACE/deepsig
       run: deepsig -f testdata/test-prok.faa --organism gramn --outf test --outfmt gff3 --threads 1
